@@ -1,11 +1,14 @@
 # Docker PHP7-FPM with composer support
 
-Alpine based PHP7-FPM docker image with support for composer command, often used extensions and proxy support.
+Alpine based PHP7-FPM docker image with often used extensions, composer and proxy support.
+
+Visit [Project on Docker Hub](https://hub.docker.com/r/zierf/php/)
 
 **Table of contents**
 <!-- TOC depthFrom:2 depthTo:4 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [Installed extensions](#installed-extensions)
+- [PHP configuration](#php-configuration)
 - [Build Image](#build-image)
 - [Build behind a (company) proxy](#build-behind-a-company-proxy)
 - [Run behind a Proxy](#run-behind-a-proxy)
@@ -23,6 +26,13 @@ Alpine based PHP7-FPM docker image with support for composer command, often used
 - Xdebug
 - OPcache
 - APCu
+
+## PHP configuration
+
+Override settings by customizing the template before building or by mounting
+your own `php.ini` file as `/usr/local/etc/php/php.ini` at runtime.
+
+The configuration for `Xdebug` is located in `/usr/local/etc/php/conf.d/xdebug.ini`.
 
 ## Build Image
 
