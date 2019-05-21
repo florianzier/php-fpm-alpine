@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.7'
 
 services:
 
@@ -6,16 +6,24 @@ services:
     build:
       context: .
       args:
-        TZ:           "Europe/Berlin"
-        INTL:         "de_DE"
-        #HTTP_PROXY:  "http://proxy.domain.tld:8080"
-        #HTTPS_PROXY: "https://proxy.domain.tld:4443"
-        #FTP_PROXY:   "ftp://proxy.domain.tld:2121"
-        #NO_PROXY:    "localhost,127.0.0.1,.domain.local"
-        #HTTP_PROXY_REQUEST_FULLURI:  "false"
-        #HTTPS_PROXY_REQUEST_FULLURI: "false"
+        PHP_VERSION:    7
+        ALPINE_VERSION: 3.9
+        TZ:             "Europe/Berlin"
+        INTL:           "de_DE"
+        http_proxy:     ${http_proxy}
+        https_proxy:    ${https_proxy}
+        no_proxy:       ${no_proxy}
+        HTTP_PROXY_REQUEST_FULLURI:  ${HTTP_PROXY_REQUEST_FULLURI}
+        HTTPS_PROXY_REQUEST_FULLURI: ${HTTPS_PROXY_REQUEST_FULLURI}
     image: zierf/php:7-fpm-alpine
-    restart: never
     #ports:
-    #  - '9000:9000'
-    #  - '9004:9004'
+    # - '9000:9000'
+    # - '9009:9009'
+    #volumes:
+    # - ./conf/ssl/certs:/usr/local/share/ca-certificates:ro
+    # - ./conf/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+    # - ./conf/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
+    # - ./conf/openldap:/etc/openldap:ro
+    env_file:
+      - .env
+    restart: never

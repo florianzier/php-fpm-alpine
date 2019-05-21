@@ -4,3 +4,8 @@
 *.cert
 *.key
 *.pem
+*.pfx
+*.p12
+
+# ignore specific environment file
+/.env

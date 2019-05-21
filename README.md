@@ -26,6 +26,8 @@ Visit [Project on Docker Hub](https://hub.docker.com/r/zierf/php/)
 - Xdebug
 - OPcache
 - APCu
+- OpenLDAP
+- SPL_TYPES
 
 ## PHP configuration
 
@@ -36,7 +38,7 @@ The configuration for `Xdebug` is located in `/usr/local/etc/php/conf.d/xdebug.i
 
 ## Build Image
 
-You can use the `docker-compose.yml` file for an easy setup of build arguments and optional temporary proxy settings.
+You can use the `docker-compose.yml` file for an easy setup of build arguments.
 
 Trigger a build with following command:
 ```bash
@@ -47,7 +49,6 @@ In order to do it without compose-file, the associated command line switch would
 docker build \
   --build-arg TZ="Europe/Berlin" \
   --build-arg INTL="de_DE" \
-  --build-arg HTTP_PROXY=proxy.domain.tld:8080 \
   --build-arg […] \
   ./
 ```
@@ -60,13 +61,13 @@ The template `/conf/xdebug.ini` stores default `Xdebug` settings.
 
 ## Build behind a (company) proxy
 
-The `HTTP_PROXY`, `HTTPS_PROXY`, `FTP_PROXY`, `NO_PROXY` arguments aren't persisted as environment variables. A proxy (and it's excluded hosts) is only set during build time to accomplish a successful connection to the download servers with extensions and composer.
+The `http_proxy`, `https_proxy`, `ftp_proxy`, `no_proxy` arguments aren't persisted as environment variables. A proxy (and it's excluded hosts) is only set during build time via an `.env` file to accomplish a successful connection to the download servers with extensions and composer.
 
-Drop your own certificates into `./conf/certs` folder if you have to connect through a SSL secured (company) proxy and therefore need a certificate file. Certificates are permanently stored in the image file, make sure it's only the public part and not containing the private key for more security.
+Drop your own certificates into `/conf/ssl/certs/` folder if you have to connect through a SSL secured (company) proxy and therefore need a certificate file. Certificates at build time are permanently stored in the image file, make sure it's only the public part and not containing the private key for more security.
 
 ## Run behind a Proxy
 
-The advantage to not store the `HTTP_PROXY`, `HTTPS_PROXY`, `FTP_PROXY`, `NO_PROXY` variables permanently in the environment is, that you can enable/disable the proxy anytime by setting the corresponding environment variables at runtime via command line or within a project's `docker-compose.yml`. Otherwise you would have to explicitly unset or override them as soon the proxy address is changed. And multiple instances behind different proxies would require a certain amount of image rebuilds.
+The advantage to not store the `http_proxy`, `https_proxy`, `ftp_proxy`, `no_proxy` variables permanently in the environment is, that you can enable/disable the proxy anytime by setting the corresponding environment variables at runtime via command line or within a project's `.env` file. Otherwise you would have to explicitly unset or override them as soon the proxy address is changed. And multiple instances behind different proxies would require a certain amount of image rebuilds.
 
 This is where the permanent stored certificates become handy. Simply drop several in the designated folder for an arbitrary amount of proxies. You can then decide for every single container, whether it should use a proxy and which one (since you have all necessary public keys built-in).
 
@@ -76,11 +77,5 @@ Following argument list is an example to build an image with system timezone set
 ```
 TZ:          "Europe/Berlin"
 INTL:        "de_DE"
-HTTP_PROXY:  "http://proxy.domain.tld:8080"
-HTTPS_PROXY: "https://proxy.domain.tld:4443"
-FTP_PROXY:   "ftp://proxy.domain.tld:2121"
-NO_PROXY:    "localhost,127.0.0.1,.domain.local"
-HTTP_PROXY_REQUEST_FULLURI:  "false"
-HTTPS_PROXY_REQUEST_FULLURI: "false"
 ```
-If you don't need some variables or connect through a proxy at all, simply prefix these lines with a `#` to comment them out.
+If you don't need some variables, simply prefix these lines with a `#` to comment them out.

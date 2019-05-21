@@ -1,5 +1,6 @@
 .git
 /docker-compose.yml
+/.env
 
 # ignore certificate files
 *.cer
@@ -7,3 +8,5 @@
 *.cert
 *.key
 *.pem
+*.pfx
+*.p12
